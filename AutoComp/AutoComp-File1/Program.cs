@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System;
 using System.IO;
-#!/usr/bin/env -S dotnet run
+#!/usr/bin/env -S dotnet;
 
 string executableType;
 string file;
