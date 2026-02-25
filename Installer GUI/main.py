@@ -42,7 +42,7 @@ class FirstBootWizard(tk.Tk):
         self.back_button.pack(side="left", padx=10)
 
         self.next_button = ttk.Button(self.nav_frame, text="Next", command=self.next)
-        self.next_button.pack(side="right", padx=10)
+        self.next_button.pack(side="right", padx=21)
 
         self.show_page(self.current_index)
 
