@@ -22,7 +22,7 @@ void FileOpened()
         RunWithWine();
     }
     else
-    {
+    { Cancel // This is a placeholder for future cancellation.
     }
 }
 
