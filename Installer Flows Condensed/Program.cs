@@ -1,6 +1,6 @@
-using Installer_Flows.UI;
+using InstallerFlows.UI;
 
-namespace Installer_Flows
+namespace InstallerFlows
 {
     class Program
     {
@@ -20,3 +20,4 @@ namespace Installer_Flows
         }
     }
 }
+
