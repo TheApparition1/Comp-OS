@@ -8,19 +8,19 @@
     "net10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\samue\\.nuget\\packages\\": {}
+    "/Users/samueldingle/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File1\\AutoComp-File1.csproj",
+      "projectUniqueName": "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File1/AutoComp-File1.csproj",
       "projectName": "AutoComp-File1",
-      "projectPath": "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File1\\AutoComp-File1.csproj",
-      "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File1\\obj\\",
+      "projectPath": "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File1/AutoComp-File1.csproj",
+      "packagesPath": "/Users/samueldingle/.nuget/packages/",
+      "outputPath": "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/samueldingle/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -65,7 +65,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

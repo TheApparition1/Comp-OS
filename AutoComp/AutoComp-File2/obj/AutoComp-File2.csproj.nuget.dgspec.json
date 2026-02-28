@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File2\\AutoComp-File2.csproj": {}
+    "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File2/AutoComp-File2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File2\\AutoComp-File2.csproj": {
+    "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File2/AutoComp-File2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File2\\AutoComp-File2.csproj",
+        "projectUniqueName": "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File2/AutoComp-File2.csproj",
         "projectName": "AutoComp-File2",
-        "projectPath": "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File2\\AutoComp-File2.csproj",
-        "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\samue\\RiderProjects\\AutoComp\\AutoComp-File2\\obj\\",
+        "projectPath": "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File2/AutoComp-File2.csproj",
+        "packagesPath": "/Users/samueldingle/.nuget/packages/",
+        "outputPath": "/Users/samueldingle/Documents/GitHub/an-attempt-at-being-better-than-Arch-Linux/AutoComp/AutoComp-File2/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/samueldingle/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

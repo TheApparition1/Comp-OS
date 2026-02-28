@@ -1,45 +1,46 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
-#!/usr/bin/env -S dotnet;
-
-string executableType;
-string file = "kitty.deb";
-string command;
-string consoleName = "kitty.deb";
-
-FileOpened();
-
-void FileOpened()
+internal class AutoComp_File1
 {
-    executableType = "exe"; 
-    if (executableType == "exe")
+    public static void Main(string[] args)
     {
-        RunWithWine();
-    }
-    else if (executableType == "msi")
-    {
-        RunWithWine();
-    }
-    else
-    { Cancel // This is a placeholder for future cancellation.
-    }
-}
+        FileOpened();
 
-void RunWithWine();
-{
-    command = "wine " + file;
-    Console.WriteLine("Command to run: " + command);
+        void FileOpened()
+        {
+            string executableType = "exe"; 
+            if (executableType == "exe")
+            {
+                RunWithWine();
+            }
+            else if (executableType == "msi")
+            {
+                RunWithWine();
+            }
+            else
+            {  // This is a placeholder for future cancellation.
+            }
+        }
+
+        static void RunWithWine()
+        {
+            string file = "kitty.deb";
+            string command = "wine " + file;
+            Console.WriteLine("Command to run: " + command);
     
-    var process = new Process();
-    process.StartInfo.FileName = "wine";
-    process.StartInfo.Arguments = file;
-    process.StartInfo.UseShellExecute = false;
-    process.StartInfo.RedirectStandardOutput = true;
-    process.Start();
+            var process = new Process();
+            process.StartInfo.FileName = "wine";
+            process.StartInfo.Arguments = file;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.Start();
 
-    string output = process.StandardOutput.ReadToEnd();
-    process.WaitForExit();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
 
-    Console.WriteLine(output);
+            Console.WriteLine(output);
+        }
+    }
 }

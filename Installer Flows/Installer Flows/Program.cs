@@ -1,3 +1,22 @@
-﻿// See https://aka.ms/new-console-template for more information
+using Installer_Flows.UI;
 
-Console.WriteLine("Hello, World!");
+namespace Installer_Flows
+{
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            try
+            {
+                var menuInterface = new MenuInterface();
+                await menuInterface.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Press Enter to exit...");
+                Console.ReadLine();
+            }
+        }
+    }
+}
