@@ -7,7 +7,16 @@ A comprehensive system installation and configuration framework with multiple to
 This repository contains several interconnected projects designed to make Linux system configuration easier and more streamlined.
 
 ---
+## Central Dependencies
 
+- **.NET Frameworks (12 recommended)** – Required to compile and run C# scripts
+- **Python 3 (system-level)** – Required to run Python scripts (e.g., main.py)
+- **Tkinter** – Python GUI/UI framework
+- **Prettier** – Code formatting and linting tool
+- **PyQt5** – Not yet implemented; planned as a new GUI layer
+- **Shadcn** – UI skins and elements
+- **Shadcn/UI** – Similar to Shadcn, focused on UI components rather than core framework functionality/Mainline
+- **Tailwind CSS** – CSS framework to simplify ideation and UI development
 ## 🎯 Core Components
 
 ### 1. **Installer Flows Condensed** (C# .NET)
