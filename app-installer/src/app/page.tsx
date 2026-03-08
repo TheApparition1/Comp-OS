@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,9 +35,10 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [terminalCommand, setTerminalCommand] = useState<string>("");
   const [terminalOutput, setTerminalOutput] = useState<string>("");
+  const [currentDialogPackage, setCurrentDialogPackage] = useState<string>("");
 
   // Search packages from Pacman and AUR
-  const searchPackages = async (query: string) => {
+  const searchPackages = useCallback(async (query: string) => {
     if (!query || query.trim() === '') {
       setApps([]);
       setFilteredApps([]);
@@ -89,11 +90,12 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   // Handle install/uninstall
   const handlePackageAction = async (packageName: string, source: string, action: 'install' | 'uninstall') => {
-    setIsInstalling(`${packageName}-${action}`);
+    const actionId = `${packageName}-${action}`;
+    setIsInstalling(actionId);
     
     try {
       const response = await fetch('/api/packages', {
@@ -130,6 +132,7 @@ export default function Home() {
       ? `yay -S ${packageName}`
       : `sudo pacman -S ${packageName}`;
     
+    setCurrentDialogPackage(packageName);
     setTerminalCommand(command);
     setTerminalOutput(`Terminal command ready. You can run this command in your terminal:\n\n${command}\n\nNote: You may need sudo privileges for Pacman operations.`);
   };
@@ -284,8 +287,30 @@ export default function Home() {
                         </div>
                         <Button
                           onClick={() => {
-                            navigator.clipboard.writeText(terminalCommand);
-                            setTerminalOutput(prev => prev + '\n\nCommand copied to clipboard!');
+                            if (navigator.clipboard && window.isSecureContext) {
+                              navigator.clipboard.writeText(terminalCommand)
+                                .then(() => {
+                                  setTerminalOutput(prev => prev + '\n\nCommand copied to clipboard!');
+                                })
+                                .catch((err) => {
+                                  console.error('Failed to copy text: ', err);
+                                  setTerminalOutput(prev => prev + '\n\nFailed to copy command. Please copy manually.');
+                                });
+                            } else {
+                              // Fallback for older browsers or non-secure contexts
+                              const textArea = document.createElement('textarea');
+                              textArea.value = terminalCommand;
+                              document.body.appendChild(textArea);
+                              textArea.select();
+                              try {
+                                document.execCommand('copy');
+                                setTerminalOutput(prev => prev + '\n\nCommand copied to clipboard!');
+                              } catch (err) {
+                                console.error('Failed to copy text: ', err);
+                                setTerminalOutput(prev => prev + '\n\nFailed to copy command. Please copy manually.');
+                              }
+                              document.body.removeChild(textArea);
+                            }
                           }}
                           variant="outline"
                           className="w-full"

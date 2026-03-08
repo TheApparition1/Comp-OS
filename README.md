@@ -120,6 +120,78 @@ python3 main.py
 
 ---
 
+### 4. **App Installer** (Next.js/React)
+Modern web-based package manager for Arch Linux with a beautiful, responsive interface.
+
+**Location:** `/app-installer/`
+
+**Purpose:**
+- Search and install packages from Pacman repositories and AUR
+- Modern web interface for package management
+- Real-time package status and installation tracking
+- Terminal command generation for manual execution
+
+**Key Features:**
+- 🔍 **Package Search**: Search Pacman and AUR repositories simultaneously
+- 📦 **Package Management**: Install/uninstall packages with one click
+- 🎨 **Modern UI**: Beautiful, responsive interface using Shadcn/UI components
+- 🖥️ **Terminal Integration**: Copy terminal commands for manual execution
+- 📊 **Real-time Status**: Track installation progress and package status
+- 🌙 **Dark Mode**: Full dark/light theme support
+- 📱 **Mobile Responsive**: Works seamlessly on all device sizes
+
+**Technology Stack:**
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **UI Framework**: Shadcn/UI, Radix UI primitives
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide React
+- **State Management**: React hooks (useState, useEffect, useCallback)
+
+**Key Files:**
+- **src/app/page.tsx** - Main package manager interface
+- **src/app/api/packages/route.ts** - API endpoints for package operations
+- **components/ui/** - Reusable UI components (shadcn/ui)
+
+**Quick Start:**
+```bash
+cd app-installer
+npm install
+npm run dev
+```
+
+Visit `http://localhost:3000` to access the package manager.
+
+**API Endpoints:**
+- `GET /api/packages?search=<query>` - Search packages
+- `POST /api/packages` - Install/uninstall packages
+
+**Dependencies:**
+- Node.js 18+ 
+- npm or yarn
+- Pacman (for package operations)
+- Optional: yay/yay-bin (for AUR support)
+
+**Architecture:**
+```
+app-installer/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx              # Main UI component
+│   │   ├── api/
+│   │   │   └── packages/
+│   │   │       └── route.ts      # API handlers
+│   │   ├── layout.tsx            # Root layout
+│   │   └── globals.css           # Global styles
+│   ├── components/
+│   │   └── ui/                   # Shadcn/ui components
+│   └── lib/                      # Utility functions
+├── public/                       # Static assets
+├── package.json                  # Dependencies
+└── next.config.ts               # Next.js config
+```
+
+---
+
 ## 📊 Project Overview
 
 | Component | Language | Type | Status |
@@ -127,6 +199,7 @@ python3 main.py
 | Installer Flows Condensed | C# / .NET | CLI Tool | ✅ Active |
 | AutoComp | C# / .NET | Utility Library | ✅ Active |
 | Installer GUI | Python | GUI Application | ⚠️ Legacy |
+| App Installer | TypeScript/Next.js | Web Application | ✅ Active |
 
 ---
 
@@ -136,9 +209,12 @@ python3 main.py
 User Input
     ↓
 ┌─────────────────────────────────────┐
-│   Installer GUI (Python/Tkinter)    │ ← Visual setup wizard
-│   OR                                 │
-│   Installer Flows CLI (C#)          │ ← Command-line interface
+│   Multiple Interface Options:        │
+│   ┌─────────────────────────────────┐ │
+│   │ Installer GUI (Python/Tkinter)  │ │ ← Visual setup wizard
+│   │ Installer Flows CLI (C#)        │ │ ← Command-line interface  
+│   │ App Installer (Web)             │ │ ← Modern web interface
+│   └─────────────────────────────────┘ │
 └─────────────────────────────────────┘
     ↓
 ┌─────────────────────────────────────┐
@@ -148,7 +224,11 @@ User Input
 └─────────────────────────────────────┘
     ↓
 ┌─────────────────────────────────────┐
-│   AutoComp (C#)                     │ ← Execute Windows apps via Wine
+│   Package Management:               │
+│   ┌─────────────────────────────────┐ │
+│   │ Pacman/AUR Operations          │ │ ← System package management
+│   │ AutoComp (C#)                  │ │ ← Windows apps via Wine
+│   └─────────────────────────────────┘ │
 └─────────────────────────────────────┘
     ↓
 System Configured & Ready
@@ -184,6 +264,15 @@ See `CONDENSATION_DETAILS.md` and `INSTALLER_FLOWS_CONDENSATION_SUMMARY.md` for 
 - Python 3.x
 - tkinter module
 
+### For Web Application (App Installer)
+- Node.js 18+ 
+- npm or yarn
+- Modern web browser
+
+### For System Integration
+- Pacman package manager (Arch Linux)
+- Optional: yay/yay-bin (for AUR support)
+
 ### For Windows Application Support
 - Wine (for AutoComp functionality)
 
@@ -199,13 +288,21 @@ dotnet build
 dotnet run
 ```
 
-### Option 2: GUI Interface
+### Option 2: Web Interface (Modern)
+```bash
+cd app-installer
+npm install
+npm run dev
+```
+Visit `http://localhost:3000` to access the web-based package manager.
+
+### Option 3: GUI Interface (Legacy)
 ```bash
 cd "Installer GUI"
 python3 main.py
 ```
 
-### Option 3: Build Everything
+### Option 4: Build Everything
 ```bash
 # Build Installer Flows
 cd "Installer Flows Condensed"
@@ -214,6 +311,10 @@ dotnet build
 # Build AutoComp
 cd ../AutoComp
 dotnet build
+
+# Setup Web Interface
+cd ../app-installer
+npm install
 
 # GUI is ready to run as-is
 ```
@@ -225,6 +326,7 @@ dotnet build
 - **CONDENSATION_DETAILS.md** - Detailed analysis of project restructuring
 - **INSTALLER_FLOWS_CONDENSATION_SUMMARY.md** - Summary of improvements and metrics
 - **Installer Flows Condensed/README.md** - Specific documentation for main installer
+- **app-installer/README.md** - Web-based package manager documentation
 
 ---
 
