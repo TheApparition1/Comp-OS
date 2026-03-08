@@ -27,6 +27,7 @@ internal class AutoComp_File1
         static void RunWithWine()
         {
             string file = "kitty.deb";
+            //is this not making it run kitty(or selected terminal) with wine?
             string command = "wine " + file;
             Console.WriteLine("Command to run: " + command);
     
@@ -44,3 +45,4 @@ internal class AutoComp_File1
         }
     }
 }
+
