@@ -1,4 +1,4 @@
-# CompOS - An Attempt at Being Better Than Arch Linux
+# CompOS 
 
 A comprehensive system installation and configuration framework with multiple tools for managing Linux distributions, package installation, and system setup.
 
