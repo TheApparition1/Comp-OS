@@ -2,7 +2,7 @@
 
 A comprehensive system installation and configuration framework with multiple tools for managing Linux distributions, package installation, and system setup.
 
-## 📁 Project Structure
+## Project Structure
 
 This repository contains several interconnected projects designed to make Linux system configuration easier and more streamlined.
 
@@ -17,7 +17,7 @@ This repository contains several interconnected projects designed to make Linux 
 - **Shadcn** – UI skins and elements
 - **Shadcn/UI** – Similar to Shadcn, focused on UI components rather than core framework functionality/Mainline
 - **Tailwind CSS** – CSS framework to simplify ideation and UI development
-## 🎯 Core Components
+## Core Components
 
 ### 1. **Installer Flows Condensed** (C# .NET)
 The main CLI-based installer and configuration tool with a condensed, optimized structure.
@@ -132,13 +132,13 @@ Modern web-based package manager for Arch Linux with a beautiful, responsive int
 - Terminal command generation for manual execution
 
 **Key Features:**
-- 🔍 **Package Search**: Search Pacman and AUR repositories simultaneously
-- 📦 **Package Management**: Install/uninstall packages with one click
-- 🎨 **Modern UI**: Beautiful, responsive interface using Shadcn/UI components
-- 🖥️ **Terminal Integration**: Copy terminal commands for manual execution
-- 📊 **Real-time Status**: Track installation progress and package status
-- 🌙 **Dark Mode**: Full dark/light theme support
-- 📱 **Mobile Responsive**: Works seamlessly on all device sizes
+-  **Package Search**: Search Pacman and AUR repositories simultaneously
+-  **Package Management**: Install/uninstall packages with one click
+-  **Modern UI**: Beautiful, responsive interface using Shadcn/UI components
+-  **Terminal Integration**: Copy terminal commands for manual execution
+-  **Real-time Status**: Track installation progress and package status
+-  **Dark Mode**: Full dark/light theme support
+-  **Mobile Responsive**: Works seamlessly on all device sizes
 
 **Technology Stack:**
 - **Frontend**: Next.js 16, React 19, TypeScript
@@ -196,10 +196,10 @@ app-installer/
 
 | Component | Language | Type | Status |
 |-----------|----------|------|--------|
-| Installer Flows Condensed | C# / .NET | CLI Tool | ✅ Active |
-| AutoComp | C# / .NET | Utility Library | ✅ Active |
-| Installer GUI | Python | GUI Application | ⚠️ Legacy |
-| App Installer | TypeScript/Next.js | Web Application | ✅ Active |
+| Installer Flows Condensed | C# / .NET | CLI Tool |  Active |
+| AutoComp | C# / .NET | Utility Library |  Active |
+| Installer GUI | Python | GUI Application |  Legacy |
+| App Installer | TypeScript/Next.js | Web Application |  Active |
 
 ---
 
@@ -278,7 +278,7 @@ See `CONDENSATION_DETAILS.md` and `INSTALLER_FLOWS_CONDENSATION_SUMMARY.md` for 
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Option 1: CLI Interface (Recommended)
 ```bash
@@ -330,7 +330,7 @@ npm install
 
 ---
 
-## 🔧 Architecture Highlights
+##  Architecture Highlights
 
 ### Clean Code Practices
 ✓ Logical separation of concerns (Models, Services, UI)
@@ -350,14 +350,14 @@ npm install
 
 ---
 
-## 📝 License & Status
+##  License & Status
 
 **Project Status:** In Development  
 **Latest Update:** February 2026
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 To contribute to this project:
 
@@ -369,7 +369,7 @@ To contribute to this project:
 
 ---
 
-## 📞 Support
+##  Support
 
 For issues or questions:
 1. Check the individual component READMEs
