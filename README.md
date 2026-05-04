@@ -1,3 +1,1 @@
-yo dawg, we made a linux distro.
-It is better.
-Actual OS to come soon
+I LOVE CODING AND TOTALLY DON'T HATE IT WHEN YOU BUGFIX FOR HRS AND WORK OUT THAT YOU JUST MISSED A SEMICOLON. NO, NOT AT ALL.
