@@ -1,0 +1,16 @@
+# Desktop Environment Preview Images
+
+This directory should contain preview images for each desktop environment:
+
+- hyprland-preview.jpg
+- minimal-preview.jpg  
+- gnome-preview.jpg
+- kde-preview.jpg
+- xfce-preview.jpg
+- cinnamon-preview.jpg
+
+Images should be:
+- Size: 800x600px
+- Format: JPEG
+- High quality screenshots showing the desktop environment
+- Include window decorations, panels, and typical desktop layout

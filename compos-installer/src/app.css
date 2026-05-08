@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --compos-primary: #2563eb;
+    --compos-secondary: #475569;
+    --compos-accent: #059669;
+    --compos-background: #ffffff;
+    --compos-surface: #f8fafc;
+    --compos-border: #e2e8f0;
+    --compos-text: #0f172a;
+    --compos-text-muted: #64748b;
+  }
+}
+
+@layer components {
+  .bg-compos-primary {
+    background-color: var(--compos-primary);
+  }
+  
+  .bg-compos-secondary {
+    background-color: var(--compos-secondary);
+  }
+  
+  .bg-compos-accent {
+    background-color: var(--compos-accent);
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "curlInstallations": {
+    "vscode": {
+      "name": "Visual Studio Code",
+      "description": "Download Visual Studio Code via curl",
+      "url": "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64",
+      "targetPath": "/tmp/vscode.deb",
+      "installCommand": "apt install -y /tmp/vscode.deb",
+      "requiresSudo": true,
+      "category": "development",
+      "dependencies": ["apt-transport-https", "ca-certificates"],
+      "verifyCommand": "code --version",
+      "cleanupCommand": "rm -f /tmp/vscode.deb"
+    },
+    "nodejs": {
+      "name": "Node.js LTS",
+      "description": "Download Node.js setup script via curl",
+      "url": "https://deb.nodesource.com/setup_lts.x",
+      "targetPath": "/tmp/node_setup.sh",
+      "setupCommand": "bash /tmp/node_setup.sh",
+      "installCommand": "apt install -y nodejs",
+      "requiresSudo": true,
+      "category": "development",
+      "dependencies": ["curl", "gnupg"],
+      "verifyCommand": "node --version && npm --version",
+      "cleanupCommand": "rm -f /tmp/node_setup.sh"
+    },
+    "docker": {
+      "name": "Docker Engine",
+      "description": "Download Docker installation script via curl",
+      "url": "https://get.docker.com",
+      "targetPath": "/tmp/docker_install.sh",
+      "installCommand": "sh /tmp/docker_install.sh",
+      "postInstallCommand": "usermod -aG docker $USER",
+      "requiresSudo": true,
+      "category": "development",
+      "dependencies": ["curl", "ca-certificates"],
+      "verifyCommand": "docker --version",
+      "cleanupCommand": "rm -f /tmp/docker_install.sh"
+    },
+    "github-cli": {
+      "name": "GitHub CLI",
+      "description": "Install GitHub CLI via official repository",
+      "url": "https://cli.github.com/packages/githubcli-archive-keyring.gpg",
+      "targetPath": "/tmp/github-cli-keyring.gpg",
+      "setupCommand": "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main' | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && gpg --dearmor < /tmp/github-cli-keyring.gpg > /usr/share/keyrings/githubcli-archive-keyring.gpg && apt update",
+      "installCommand": "apt install -y gh",
+      "requiresSudo": true,
+      "category": "development",
+      "dependencies": ["curl", "gnupg", "software-properties-common"],
+      "verifyCommand": "gh --version",
+      "cleanupCommand": "rm -f /tmp/github-cli-keyring.gpg"
+    },
+    "chrome": {
+      "name": "Google Chrome",
+      "description": "Download Google Chrome via curl",
+      "url": "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb",
+      "targetPath": "/tmp/chrome.deb",
+      "installCommand": "apt install -y /tmp/chrome.deb",
+      "requiresSudo": true,
+      "category": "browser",
+      "dependencies": ["wget", "apt-transport-https"],
+      "verifyCommand": "google-chrome --version",
+      "cleanupCommand": "rm -f /tmp/chrome.deb"
+    },
+    "slack": {
+      "name": "Slack Desktop",
+      "description": "Download Slack via curl",
+      "url": "https://downloads.slack-edge.com/releases/linux/4.35.222/x64/slack-desktop-4.35.222-amd64.deb",
+      "targetPath": "/tmp/slack.deb",
+      "installCommand": "apt install -y /tmp/slack.deb",
+      "requiresSudo": true,
+      "category": "communication",
+      "dependencies": ["libgtk-3-0", "libnotify4", "libnss3", "libxss1", "libxtst6", "xdg-utils", "libatspi2.0-0", "libdrm2", "libxcomposite1", "libxdamage1", "libxrandr2", "libgbm1", "libxkbcommon0", "libasound2"],
+      "verifyCommand": "slack --version",
+      "cleanupCommand": "rm -f /tmp/slack.deb"
+    },
+    "obsidian": {
+      "name": "Obsidian",
+      "description": "Download Obsidian via curl",
+      "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.5.3/Obsidian-1.5.3.AppImage",
+      "targetPath": "/tmp/obsidian.AppImage",
+      "installCommand": "chmod +x /tmp/obsidian.AppImage && mv /tmp/obsidian.AppImage /usr/local/bin/obsidian",
+      "requiresSudo": true,
+      "category": "productivity",
+      "dependencies": ["fuse", "libgtk-3-0"],
+      "verifyCommand": "obsidian --version",
+      "cleanupCommand": "rm -f /tmp/obsidian.AppImage"
+    },
+    "spotify": {
+      "name": "Spotify",
+      "description": "Install Spotify via official repository",
+      "url": "https://download.spotify.com/data/pub-signatures/SpotifyPubKey.asc",
+      "targetPath": "/tmp/spotify-key.asc",
+      "setupCommand": "gpg --dearmor < /tmp/spotify-key.asc > /usr/share/keyrings/spotify-archive-keyring.gpg && echo 'deb [signed-by=/usr/share/keyrings/spotify-archive-keyring.gpg] http://repository.spotify.com stable non-free' | tee /etc/apt/sources.list.d/spotify.list",
+      "installCommand": "apt update && apt install -y spotify-client",
+      "requiresSudo": true,
+      "category": "multimedia",
+      "dependencies": ["curl", "gnupg"],
+      "verifyCommand": "spotify --version || echo 'Spotify installed (version check may fail)'",
+      "cleanupCommand": "rm -f /tmp/spotify-key.asc"
+    },
+    "firefox": {
+      "name": "Mozilla Firefox",
+      "description": "Install Firefox via apt repository",
+      "installCommand": "apt install -y firefox",
+      "requiresSudo": true,
+      "category": "browser",
+      "dependencies": ["wget", "apt-transport-https"],
+      "verifyCommand": "firefox --version",
+      "useCurl": false
+    },
+    "git": {
+      "name": "Git",
+      "description": "Install Git version control",
+      "installCommand": "apt install -y git",
+      "requiresSudo": true,
+      "category": "development",
+      "dependencies": ["curl", "openssh-client"],
+      "verifyCommand": "git --version",
+      "useCurl": false
+    }
+  },
+  "curlOptions": {
+    "timeout": 300,
+    "retryAttempts": 3,
+    "verifySSL": true,
+    "followRedirects": true,
+    "userAgent": "CompOS-Installer/1.0"
+  },
+  "categories": {
+    "development": {
+      "name": "Development Tools",
+      "description": "Software development and programming tools",
+      "priority": "high"
+    },
+    "browser": {
+      "name": "Web Browsers",
+      "description": "Internet and web browsing applications",
+      "priority": "medium"
+    },
+    "communication": {
+      "name": "Communication",
+      "description": "Chat and communication tools",
+      "priority": "medium"
+    },
+    "productivity": {
+      "name": "Productivity",
+      "description": "Office and productivity applications",
+      "priority": "medium"
+    },
+    "multimedia": {
+      "name": "Multimedia",
+      "description": "Audio, video, and media applications",
+      "priority": "low"
+    }
+  }
+}
