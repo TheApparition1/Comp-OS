@@ -78,6 +78,8 @@
     }
   }
 
+  /** @param {number} percentage */
+  /** @param {string} status */
   function getBatteryIcon(percentage, status) {
     if (status === 'Charging') return BatteryCharging;
     if (percentage > 80) return BatteryFull;
@@ -87,10 +89,11 @@
   }
   
   function nextStep() {
+    /** @type {keyof typeof $stepValidity} */
     const stepName = steps[currentStep].name;
     if (currentTab < currentStepTabs.length - 1) {
       currentTab++;
-    } else if (currentStep < steps.length - 1 && $stepValidity[stepName]) {
+    } else if (currentStep < steps.length - 1 && $stepValidity[/** @type {keyof typeof $stepValidity} */ (stepName)]) {
       currentStep++;
       currentTab = 0;
     }
@@ -192,8 +195,14 @@
         {#each steps as step, index}
           <button 
             class="text-left group transition-all"
-            on:click={() => { if (index <= currentStep || $stepValidity[steps[index-1]?.name]) currentStep = index; }}
-            disabled={index > currentStep && !$stepValidity[steps[index-1]?.name]}
+            on:click={() => { 
+              const prevStepName = steps[index-1]?.name;
+              if (index <= currentStep || (prevStepName && $stepValidity[/** @type {keyof typeof $stepValidity} */ (prevStepName)])) currentStep = index; 
+            }}
+            disabled={index > currentStep && (() => {
+              const prevStepName = steps[index-1]?.name;
+              return !(prevStepName && $stepValidity[/** @type {keyof typeof $stepValidity} */ (prevStepName)]);
+            })()}
           >
             <div class="text-[10px] font-bold uppercase tracking-tighter mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
               {step.name}
@@ -221,7 +230,7 @@
         <div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }} class="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <svelte:component 
             this={currentStepComponent} 
-            onModeSelect={currentStep === 0 ? nextStep : undefined}
+            {...(currentStep === 0 ? { onModeSelect: nextStep } : {})}
           />
         </div>
       {/key}
@@ -271,7 +280,10 @@
           <button 
             class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none" 
             on:click={nextStep} 
-            disabled={!$stepValidity[steps[currentStep].name]}
+            disabled={() => {
+              const currentStepName = steps[currentStep].name;
+              return !$stepValidity[currentStepName];
+            }}
           >
             {#if currentStep === steps.length - 1 && isLastTab}
               Complete Installation

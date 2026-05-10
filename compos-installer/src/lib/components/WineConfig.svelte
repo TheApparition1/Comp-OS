@@ -48,6 +48,7 @@
     }
   ];
   
+  /** @param {string} optionId */
   function selectWineOption(optionId) {
     wineOptionId = optionId;
     updateInstallerSection('wine', { option: optionId });
