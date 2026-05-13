@@ -1,0 +1,13 @@
+{
+  "name": "comp-os",
+  "version": "1.0.0",
+  "description": "CompOS is a Linux Distribution designed to make using Linux approachable for anyone, regardless of skill level. It also includes a Tauri based installer in both Rust for the actual install, and Svelte as the UI for the installer to make it both pretty and streamlined. Svelte is a UI framework for JS, and is a commonly used web framework.",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cd compos-installer && npm run dev"
+  }
+}
