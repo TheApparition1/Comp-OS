@@ -76,25 +76,29 @@ fn check_sudo_available() -> bool {
 
 #[tauri::command]
 fn get_system_info() -> SystemInfo {
-    let hostname = std::env::var("HOSTNAME")
-        .or_else(|_| std::env::var("COMPUTERNAME"))
-        .unwrap_or_else(|_| "Unknown".to_string());
+    let hostname = std::fs::read_to_string("/etc/hostname")
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .or_else(|| std::env::var("HOSTNAME").ok())
+        .or_else(|| std::env::var("COMPUTERNAME").ok())
+        .unwrap_or_else(|| "Unknown".to_string());
     SystemInfo { hostname }
 }
 
 #[tauri::command]
 fn get_system_statistics() -> SystemStatistics {
     SystemStatistics {
-        cpu_usage: 0.0,
-        memory_usage: 0.0,
+        cpu_usage: 1.0,
+        memory_usage: 1.0,
     }
 }
 
 #[tauri::command]
 fn get_battery_info() -> BatteryInfo {
     BatteryInfo {
-        percentage: 100,
-        status: "Full".to_string(),
+        percentage: 0,
+        status: "Unavailable".to_string(),
         is_present: false,
     }
 }
