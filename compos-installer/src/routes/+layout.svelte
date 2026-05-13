@@ -32,7 +32,9 @@
 </svelte:head>
 
 <div class="min-h-screen bg-[#f8fafc] text-slate-900">
-  {#if mounted && !unlocked}
+  {#if !mounted}
+    <div class="min-h-screen bg-[#f8fafc]"></div>
+  {:else if !unlocked}
     <div class="min-h-screen relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.18),_transparent_42%),linear-gradient(135deg,_#f8fafc_0%,_#eef2ff_45%,_#e2e8f0_100%)]">
       <div class="absolute inset-0 pointer-events-none opacity-60" style="background-image: radial-gradient(circle at 1px 1px, rgba(148,163,184,0.16) 1px, transparent 0); background-size: 24px 24px;"></div>
       <div class="relative min-h-screen flex items-center justify-center px-6 py-12">
