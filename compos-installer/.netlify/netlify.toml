@@ -7,10 +7,10 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "/Users/samueldingle/Documents/Coding Projects/Comp-OS/compos-installer/build"
+publish = "dist"
 publishOrigin = "ui"
 commandOrigin = "ui"
-base = "/Users/samueldingle/Documents/Coding Projects/Comp-OS/compos-installer"
+base = "."
 command = "npm run build"
 
 [build.environment]

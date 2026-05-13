@@ -1,0 +1,14 @@
+{
+  "name": "Comp-OS",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "compos-installer"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace compos-installer",
+    "build": "npm run build --workspace compos-installer",
+    "check": "npm run check --workspace compos-installer",
+    "preview": "npm run preview --workspace compos-installer"
+  }
+}
