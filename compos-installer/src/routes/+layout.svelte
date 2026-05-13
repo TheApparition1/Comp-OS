@@ -52,7 +52,7 @@
           <div class="mb-8 space-y-3">
             <h2 class="text-lg font-semibold text-slate-900">Enter access password</h2>
             <p class="text-sm leading-6 text-slate-500">
-              This demo hides the installer UI until the password is entered. It is meant for presentation, not strong security.
+              This demo hides the installer UI until the password is entered. For production website protection, use server/hosting authentication.
             </p>
           </div>
 
@@ -68,11 +68,17 @@
                 placeholder="Enter password"
                 bind:value={password}
                 autocomplete="current-password"
+                aria-describedby={error ? 'installer-password-error' : undefined}
               />
             </div>
 
             {#if error}
-              <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <div
+                id="installer-password-error"
+                role="alert"
+                aria-live="assertive"
+                class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"
+              >
                 {error}
               </div>
             {/if}

@@ -2,7 +2,7 @@
 name = "compos-installer"
 version = "0.1.0"
 description = "CompOS Installer"
-authors = ["you"]
+authors = ["CompOS Team"]
 edition = "2021"
 
 [build-dependencies]
@@ -15,7 +15,7 @@ serde_json = "1.0"
 
 [lib]
 name = "compos_installer"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "compos-installer"
