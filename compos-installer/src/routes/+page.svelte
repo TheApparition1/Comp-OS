@@ -31,7 +31,7 @@
   let showDangerModal = false;
   let dangerConfirmation = '';
   const DANGER_PHRASE = 'ENABLE DANGEROUS MODE';
-  const INSTALLER_PASSWORD_HASH = 'f2f96a48b29dd8f5f7bc5f87064b4592582f5f84db0f1309f7297585176d6497';
+  /** @type {ReturnType<typeof setInterval> | undefined} */
   let statsInterval;
   
   const steps = [
@@ -150,6 +150,8 @@
     if (!credential) return false;
 
     if (!window?.crypto?.subtle) return false;
+    const expectedHash = import.meta.env.VITE_INSTALLER_PASSWORD_HASH || '';
+    if (!expectedHash) return false;
 
     const data = new TextEncoder().encode(credential);
     const digest = await window.crypto.subtle.digest('SHA-256', data);
@@ -157,7 +159,7 @@
       .map((byte) => byte.toString(16).padStart(2, '0'))
       .join('');
 
-    return hash === INSTALLER_PASSWORD_HASH;
+    return hash === expectedHash;
   }
 
   /**
@@ -297,7 +299,11 @@
     <main class="min-h-[500px] mb-24">
       {#key currentStep}
         <div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }} class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <svelte:component this={currentStepComponent} />
+          {#if currentStep === 0}
+            <Welcome onModeSelect={nextStep} />
+          {:else}
+            <svelte:component this={currentStepComponent} />
+          {/if}
         </div>
       {/key}
     </main>
