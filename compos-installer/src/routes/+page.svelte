@@ -31,6 +31,8 @@
   let showDangerModal = false;
   let dangerConfirmation = '';
   const DANGER_PHRASE = 'ENABLE DANGEROUS MODE';
+  const INSTALLER_PASSWORD_HASH = 'f2f96a48b29dd8f5f7bc5f87064b4592582f5f84db0f1309f7297585176d6497';
+  let statsInterval;
   
   const steps = [
     { name: 'Welcome', component: Welcome },
@@ -57,10 +59,22 @@
 
   $: progressPercent = steps.length > 0 ? ((currentStep + (currentStepTabs.length > 0 ? currentTab / currentStepTabs.length : 0)) / steps.length) * 100 : 0;
 
+  $: {
+    if (isAuthorized && !statsInterval) {
+      updateSystemStats();
+      statsInterval = setInterval(updateSystemStats, 5000);
+    } else if (!isAuthorized && statsInterval) {
+      clearInterval(statsInterval);
+      statsInterval = undefined;
+    }
+  }
+
   onMount(() => {
-    updateSystemStats();
-    const interval = setInterval(updateSystemStats, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      if (statsInterval) {
+        clearInterval(statsInterval);
+      }
+    };
   });
 
   async function updateSystemStats() {
@@ -128,10 +142,50 @@
     showDangerModal = false;
     dangerConfirmation = '';
   }
+
+  /**
+   * @param {string} credential
+   */
+  async function authorizeInstaller(credential) {
+    if (!credential) return false;
+
+    if (!window?.crypto?.subtle) return false;
+
+    const data = new TextEncoder().encode(credential);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    const hash = Array.from(new Uint8Array(digest))
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('');
+
+    return hash === INSTALLER_PASSWORD_HASH;
+  }
+
+  /**
+   * @param {number} targetStepIndex
+   */
+  function canNavigateToStep(targetStepIndex) {
+    if (targetStepIndex <= currentStep) return true;
+
+    for (let i = 0; i < targetStepIndex; i++) {
+      /** @type {any} */
+      const stepName = steps[i]?.name;
+      if (stepName && !$stepValidity[stepName]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 </script>
 
 {#if !isAuthorized}
-  <AuthScreen onAuthorized={() => isAuthorized = true} />
+  <AuthScreen
+    authorize={authorizeInstaller}
+    onAuthorized={async () => {
+      isAuthorized = true;
+      await updateSystemStats();
+    }}
+  />
 {:else}
   <div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100" in:fade>
     <!-- Subtle Marble-like background effect -->
@@ -212,12 +266,12 @@
           <button 
             class="text-left group transition-all"
             on:click={() => { 
-              const prevStepName = steps[index-1]?.name;
-              /** @type {any} */
-              const psn = prevStepName;
-              if (index <= currentStep || (psn && $stepValidity[psn])) currentStep = index; 
+              if (canNavigateToStep(index)) {
+                currentStep = index;
+                currentTab = 0;
+              }
             }}
-            disabled={index > currentStep && !((steps[index-1]?.name) && $stepValidity[/** @type {any} */ (steps[index-1].name)])}
+            disabled={!canNavigateToStep(index)}
           >
             <div class="text-[10px] font-bold uppercase tracking-tighter mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
               {step.name}
@@ -243,10 +297,7 @@
     <main class="min-h-[500px] mb-24">
       {#key currentStep}
         <div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }} class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <svelte:component 
-            this={currentStepComponent} 
-            {...(currentStep === 0 ? { onModeSelect: nextStep } : {})}
-          />
+          <svelte:component this={currentStepComponent} />
         </div>
       {/key}
     </main>
@@ -296,10 +347,10 @@
             class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none" 
             on:click={nextStep} 
             disabled={isLastTab
-              ? !$stepValidity[/** @type {any} */ (steps[currentStep].name)]
-              : !$tabCompletion[/** @type {any} */ (steps[currentStep].name)]?.[
-                  /** @type {any} */ (getVisibleTabs(steps[currentStep].name, $installerState)[currentTab])
-                ]}
+               ? !$stepValidity[/** @type {any} */ (steps[currentStep].name)]
+               : !$tabCompletion[/** @type {any} */ (steps[currentStep].name)]?.[
+                   /** @type {any} */ (getVisibleTabs(steps[currentStep].name, $installerState.userExperienceMode)[currentTab])
+                 ]}
           >
             {#if currentStep === steps.length - 1 && isLastTab}
               Complete Installation
@@ -340,9 +391,3 @@
 {/if}
 
 {/if}
-
-<style>
-  .step-content {
-    min-height: 55vh;
-  }
-</style>

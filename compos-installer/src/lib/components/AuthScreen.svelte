@@ -3,9 +3,8 @@
   import { fade, fly } from 'svelte/transition';
 
   export let onAuthorized = () => {};
-  export let authorize = async () => {
-    throw new Error('Authorization must be implemented by a trusted native/backend layer');
-  };
+  /** @type {(password: string) => Promise<boolean>} */
+  export let authorize = async (_password) => false;
 
   let password = '';
   let error = '';
@@ -58,7 +57,7 @@
     <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
       <div class="space-y-6">
         <div class="space-y-3">
-          <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="password">Administrator Password</label>
+          <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="password">Installer Access Password</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
               <Key class="w-5 h-5" />
@@ -67,7 +66,7 @@
               id="password"
               type="password" 
               class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:border-blue-600 focus:outline-none font-medium text-slate-700 transition-all {error ? 'border-red-300 bg-red-50' : ''}" 
-              placeholder="Enter password"
+              placeholder="Enter installer password"
               bind:value={password}
               on:keydown={handleKeydown}
               disabled={isLoading}
