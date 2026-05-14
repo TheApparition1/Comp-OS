@@ -162,6 +162,7 @@
       .map((byte) => byte.toString(16).padStart(2, '0'))
       .join('');
 
+    console.log('Auth attempt hash:', hash);
     return hash === expectedHash;
   }
 
