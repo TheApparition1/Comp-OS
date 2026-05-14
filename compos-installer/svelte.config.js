@@ -6,7 +6,6 @@ const config = {
 		adapter: adapter({
 			pages: 'dist',
 			assets: 'dist',
-			// Tauri loads a static build; use SPA fallback routing.
 			fallback: 'index.html',
 			precompress: false,
 			strict: true

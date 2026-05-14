@@ -8,9 +8,11 @@ Install UI Installer with npm:
 
 ```bash
   git clone https://github.com/TheApparition1/Comp-OS.git
-  cd "Installer Design UI/compos-installer"
+  cd Comp-OS
   npm install
 ```
+
+Run the installer UI from the repo root with `npm run dev`.
 
 ## Tech Stack
 
