@@ -286,7 +286,11 @@
           <button 
             class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none" 
             on:click={nextStep} 
-            disabled={!$stepValidity[/** @type {any} */ (steps[currentStep].name)]}
+            disabled={isLastTab
+              ? !$stepValidity[/** @type {any} */ (steps[currentStep].name)]
+              : !$tabCompletion[/** @type {any} */ (steps[currentStep].name)]?.[
+                  /** @type {any} */ (getVisibleTabs(steps[currentStep].name, $installerState)[currentTab])
+                ]}
           >
             {#if currentStep === steps.length - 1 && isLastTab}
               Complete Installation
