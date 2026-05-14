@@ -101,7 +101,7 @@
           <Shield class="w-5 h-5" />
         </div>
         <p class="text-[11px] font-medium text-slate-500 leading-relaxed">
-          This Password gate is simply a protection mechanism to prevent unauthorised viewing of the installer, which is not open source. This does not affect the existing system.
+          This password gate is simply a protection mechanism to prevent unauthorised viewing of the installer, which is not open source. This does not affect the existing system.
         </p>
       </div>
     </div>
