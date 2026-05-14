@@ -21,7 +21,7 @@
 
   let desktops = [
     { 
-      id: 'hyprland', 
+      id: 'hyprland',
       name: 'Hyprland', 
       description: 'Dynamic Tiling Wayland Compositor. Hyprland is a tiling Wayland compositor that doesn\'t sacrifice on looks. It provides a highly customizable and fluid experience with amazing animations.',
       icon: 'HY',
@@ -76,6 +76,7 @@
 
   $: selectedDesktop = desktops.find(d => d.id === selectedDesktopId) || desktops[1];
   
+  /** @param {string} desktopId */
   function selectDesktop(desktopId) {
     selectedDesktopId = desktopId;
     updateInstallerSection('desktop', { selectedDesktop: desktopId });
@@ -94,8 +95,8 @@
         class="px-5 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 {activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}"
         on:click={() => setCurrentTab(tabs.indexOf(tab))}
       >
-        <svelte:component this={tabIcons[tab]} class="w-4 h-4" />
-        {tabLabels[tab]}
+        <svelte:component this={tabIcons[/** @type {keyof typeof tabIcons} */ (tab)]} class="w-4 h-4" />
+        {tabLabels[/** @type {keyof typeof tabLabels} */ (tab)]}
       </button>
     {/each}
   </div>

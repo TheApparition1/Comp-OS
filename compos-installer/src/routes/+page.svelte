@@ -18,9 +18,11 @@
   import NetworkConfig from '$lib/components/NetworkConfig.svelte';
   import TerminalSelection from '$lib/components/TerminalSelection.svelte';
   import WineConfig from '$lib/components/WineConfig.svelte';
+  import AuthScreen from '$lib/components/AuthScreen.svelte';
 
   let currentStep = 0;
   let currentTab = 0;
+  let isAuthorized = false;
   let installSteps = [];
   let hasSudo = false;
   let systemInfo = { hostname: 'Unknown' };
@@ -29,6 +31,8 @@
   let showDangerModal = false;
   let dangerConfirmation = '';
   const DANGER_PHRASE = 'ENABLE DANGEROUS MODE';
+  /** @type {ReturnType<typeof setInterval> | undefined} */
+  let statsInterval;
   
   const steps = [
     { name: 'Welcome', component: Welcome },
@@ -55,10 +59,22 @@
 
   $: progressPercent = steps.length > 0 ? ((currentStep + (currentStepTabs.length > 0 ? currentTab / currentStepTabs.length : 0)) / steps.length) * 100 : 0;
 
+  $: {
+    if (isAuthorized && !statsInterval) {
+      updateSystemStats();
+      statsInterval = setInterval(updateSystemStats, 5000);
+    } else if (!isAuthorized && statsInterval) {
+      clearInterval(statsInterval);
+      statsInterval = undefined;
+    }
+  }
+
   onMount(() => {
-    updateSystemStats();
-    const interval = setInterval(updateSystemStats, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      if (statsInterval) {
+        clearInterval(statsInterval);
+      }
+    };
   });
 
   async function updateSystemStats() {
@@ -78,8 +94,10 @@
     }
   }
 
-  /** @param {number} percentage */
-  /** @param {string} status */
+  /** 
+   * @param {number} percentage 
+   * @param {string} status 
+   */
   function getBatteryIcon(percentage, status) {
     if (status === 'Charging') return BatteryCharging;
     if (percentage > 80) return BatteryFull;
@@ -89,11 +107,11 @@
   }
   
   function nextStep() {
-    /** @type {keyof typeof $stepValidity} */
+    /** @type {any} */
     const stepName = steps[currentStep].name;
     if (currentTab < currentStepTabs.length - 1) {
       currentTab++;
-    } else if (currentStep < steps.length - 1 && $stepValidity[/** @type {keyof typeof $stepValidity} */ (stepName)]) {
+    } else if (currentStep < steps.length - 1 && $stepValidity[stepName]) {
       currentStep++;
       currentTab = 0;
     }
@@ -124,13 +142,70 @@
     showDangerModal = false;
     dangerConfirmation = '';
   }
+
+  /**
+   * @param {string} credential
+   */
+  async function authorizeInstaller(credential) {
+    if (!credential) return false;
+
+    if (!window?.crypto?.subtle) return false;
+    const expectedHash = import.meta.env.VITE_INSTALLER_PASSWORD_HASH || '';
+    if (!expectedHash) {
+      console.warn('Installer auth is not configured: set VITE_INSTALLER_PASSWORD_HASH.');
+      return false;
+    }
+
+    const data = new TextEncoder().encode(credential);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    const hash = Array.from(new Uint8Array(digest))
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('');
+
+    return hash === expectedHash;
+  }
+
+  /**
+   * @param {number} targetStepIndex
+   */
+  function canNavigateToStep(targetStepIndex) {
+    if (targetStepIndex <= currentStep) return true;
+
+    for (let i = 0; i < targetStepIndex; i++) {
+      /** @type {any} */
+      const stepName = steps[i]?.name;
+      if (stepName && !$stepValidity[stepName]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 </script>
 
-<div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100">
-  <!-- Subtle Marble-like background effect -->
-  <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style="background-image: url('https://www.transparenttextures.com/patterns/marble.png');"></div>
+{#if !isAuthorized}
+  <AuthScreen
+    authorize={authorizeInstaller}
+    onAuthorized={async () => {
+      isAuthorized = true;
+      await updateSystemStats();
+    }}
+  />
+{:else}
+  <div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100" in:fade>
+    <!-- Subtle Marble-like background effect -->
+    <div
+      class="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+      style="background-image:
+        radial-gradient(circle at 20% 20%, rgba(15, 23, 42, 0.18) 0, transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(15, 23, 42, 0.12) 0, transparent 30%),
+        radial-gradient(circle at 40% 75%, rgba(15, 23, 42, 0.14) 0, transparent 32%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.08) 25%, transparent 25%, transparent 50%, rgba(15, 23, 42, 0.08) 50%, rgba(15, 23, 42, 0.08) 75%, transparent 75%, transparent);
+        background-size: 320px 320px, 280px 280px, 360px 360px, 24px 24px;
+        background-position: 0 0, 120px 40px, 60px 160px, 0 0;"
+    ></div>
 
-  <div class="relative z-10 max-w-6xl mx-auto px-6 py-8">
+    <div class="relative z-10 max-w-6xl mx-auto px-6 py-8">
     <header class="mb-10 flex items-end justify-between border-b border-slate-200 pb-6">
       <div>
         <div class="flex items-center gap-3 mb-1">
@@ -196,13 +271,12 @@
           <button 
             class="text-left group transition-all"
             on:click={() => { 
-              const prevStepName = steps[index-1]?.name;
-              if (index <= currentStep || (prevStepName && $stepValidity[/** @type {keyof typeof $stepValidity} */ (prevStepName)])) currentStep = index; 
+              if (canNavigateToStep(index)) {
+                currentStep = index;
+                currentTab = 0;
+              }
             }}
-            disabled={index > currentStep && (() => {
-              const prevStepName = steps[index-1]?.name;
-              return !(prevStepName && $stepValidity[/** @type {keyof typeof $stepValidity} */ (prevStepName)]);
-            })()}
+            disabled={!canNavigateToStep(index)}
           >
             <div class="text-[10px] font-bold uppercase tracking-tighter mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
               {step.name}
@@ -228,10 +302,11 @@
     <main class="min-h-[500px] mb-24">
       {#key currentStep}
         <div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }} class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <svelte:component 
-            this={currentStepComponent} 
-            {...(currentStep === 0 ? { onModeSelect: nextStep } : {})}
-          />
+          {#if currentStep === 0}
+            <Welcome onModeSelect={nextStep} />
+          {:else}
+            <svelte:component this={currentStepComponent} />
+          {/if}
         </div>
       {/key}
     </main>
@@ -280,10 +355,11 @@
           <button 
             class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none" 
             on:click={nextStep} 
-            disabled={() => {
-              const currentStepName = steps[currentStep].name;
-              return !$stepValidity[currentStepName];
-            }}
+            disabled={isLastTab
+               ? !$stepValidity[/** @type {any} */ (steps[currentStep].name)]
+               : !$tabCompletion[/** @type {any} */ (steps[currentStep].name)]?.[
+                   /** @type {any} */ (getVisibleTabs(steps[currentStep].name, $installerState.userExperienceMode)[currentTab])
+                 ]}
           >
             {#if currentStep === steps.length - 1 && isLastTab}
               Complete Installation
@@ -323,8 +399,4 @@
   </div>
 {/if}
 
-<style>
-  .step-content {
-    min-height: 55vh;
-  }
-</style>
+{/if}
