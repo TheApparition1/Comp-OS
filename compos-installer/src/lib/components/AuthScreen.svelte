@@ -4,7 +4,10 @@
 
   export let onAuthorized = () => {};
   /** @type {(password: string) => Promise<boolean>} */
-  export let authorize = async (_password) => false;
+  export let authorize = async (password) => {
+    void password;
+    return false;
+  };
 
   let password = '';
   let error = '';
