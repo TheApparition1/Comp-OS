@@ -3,12 +3,13 @@
   import { fade, fly } from 'svelte/transition';
 
   export let onAuthorized = () => {};
+  export let authorize = async () => {
+    throw new Error('Authorization must be implemented by a trusted native/backend layer');
+  };
 
   let password = '';
   let error = '';
   let isLoading = false;
-
-  const CORRECT_PASSWORD = 'compos';
 
   async function handleSubmit() {
     if (isLoading) return;
@@ -16,16 +17,24 @@
     isLoading = true;
     error = '';
 
-    // Simulate a brief check for better UX
-    setTimeout(() => {
-      if (password === CORRECT_PASSWORD) {
-        onAuthorized();
+    try {
+      // Keep the brief delay for the existing UX while delegating verification
+      await new Promise((resolve) => setTimeout(resolve, 600));
+
+      const isAuthorized = await authorize(password);
+
+      if (isAuthorized) {
+        await onAuthorized();
       } else {
         error = 'Invalid authentication credentials';
         password = '';
-        isLoading = false;
       }
-    }, 600);
+    } catch {
+      error = 'Authentication service unavailable';
+      password = '';
+    } finally {
+      isLoading = false;
+    }
   }
 
   /** @param {KeyboardEvent} e */
