@@ -135,7 +135,16 @@
 {:else}
   <div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100" in:fade>
     <!-- Subtle Marble-like background effect -->
-    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style="background-image: url('https://www.transparenttextures.com/patterns/marble.png');"></div>
+    <div
+      class="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+      style="background-image:
+        radial-gradient(circle at 20% 20%, rgba(15, 23, 42, 0.18) 0, transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(15, 23, 42, 0.12) 0, transparent 30%),
+        radial-gradient(circle at 40% 75%, rgba(15, 23, 42, 0.14) 0, transparent 32%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.08) 25%, transparent 25%, transparent 50%, rgba(15, 23, 42, 0.08) 50%, rgba(15, 23, 42, 0.08) 75%, transparent 75%, transparent);
+        background-size: 320px 320px, 280px 280px, 360px 360px, 24px 24px;
+        background-position: 0 0, 120px 40px, 60px 160px, 0 0;"
+    ></div>
 
     <div class="relative z-10 max-w-6xl mx-auto px-6 py-8">
     <header class="mb-10 flex items-end justify-between border-b border-slate-200 pb-6">
