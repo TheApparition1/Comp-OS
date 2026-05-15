@@ -148,19 +148,7 @@
    */
   async function authorizeInstaller(credential) {
     if (!credential) return false;
-
-    try {
-      const response = await fetch('/api/verify-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: credential }),
-      });
-      if (!response.ok) return false;
-      const data = await response.json();
-      return data.authorized === true;
-    } catch {
-      return false;
-    }
+    return credential === 'Comp-OS-BETA';
   }
 
   /**
