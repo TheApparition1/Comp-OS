@@ -149,21 +149,18 @@
   async function authorizeInstaller(credential) {
     if (!credential) return false;
 
-    if (!window?.crypto?.subtle) return false;
-    const expectedHash = import.meta.env.VITE_INSTALLER_PASSWORD_HASH || '';
-    if (!expectedHash) {
-      console.warn('Installer auth is not configured: set VITE_INSTALLER_PASSWORD_HASH.');
+    try {
+      const response = await fetch('/api/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: credential }),
+      });
+      if (!response.ok) return false;
+      const data = await response.json();
+      return data.authorized === true;
+    } catch {
       return false;
     }
-
-    const data = new TextEncoder().encode(credential);
-    const digest = await window.crypto.subtle.digest('SHA-256', data);
-    const hash = Array.from(new Uint8Array(digest))
-      .map((byte) => byte.toString(16).padStart(2, '0'))
-      .join('');
-
-    console.log('Auth attempt hash:', hash);
-    return hash === expectedHash;
   }
 
   /**
