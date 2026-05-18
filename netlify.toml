@@ -1,0 +1,4 @@
+[build]
+  base = "compos-installer"
+  command = "npm run build"
+  publish = "dist"

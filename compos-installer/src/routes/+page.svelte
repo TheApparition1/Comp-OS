@@ -31,6 +31,8 @@
   let showDangerModal = false;
   let dangerConfirmation = '';
   const DANGER_PHRASE = 'ENABLE DANGEROUS MODE';
+  /** @type {ReturnType<typeof setInterval> | undefined} */
+  let statsInterval;
   
   const steps = [
     { name: 'Welcome', component: Welcome },
@@ -51,24 +53,11 @@
   $: setCurrentTab(currentTab);
 
   $: currentStepComponent = steps[currentStep]?.component;
-  $: currentStepTabs = getVisibleTabs(steps[currentStep]?.name, $installerState.userExperienceMode) || ['main'];
-  
-  $: {
-    // Ensure currentTab is always valid for the current step
-    if (currentTab >= currentStepTabs.length) {
-      currentTab = 0;
-    }
-  }
-
+  $: currentStepTabs = getVisibleTabs(steps[currentStep]?.name, $installerState.userExperienceMode);
   $: isLastTab = currentTab >= currentStepTabs.length - 1;
   $: isFirstTab = currentTab === 0;
 
   $: progressPercent = steps.length > 0 ? ((currentStep + (currentStepTabs.length > 0 ? currentTab / currentStepTabs.length : 0)) / steps.length) * 100 : 0;
-
-<<<<<<< Updated upstream
-=======
-  /** @type {any} */
-  $: currentStepName = steps[currentStep]?.name;
 
   $: {
     if (isAuthorized && !statsInterval) {
@@ -80,11 +69,12 @@
     }
   }
 
->>>>>>> Stashed changes
   onMount(() => {
-    updateSystemStats();
-    const interval = setInterval(updateSystemStats, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      if (statsInterval) {
+        clearInterval(statsInterval);
+      }
+    };
   });
 
   async function updateSystemStats() {
@@ -152,15 +142,13 @@
     showDangerModal = false;
     dangerConfirmation = '';
   }
-<<<<<<< Updated upstream
-=======
 
   /**
    * @param {string} credential
    */
   async function authorizeInstaller(credential) {
-    // Authorization disabled - always allow access
-    return true;
+    if (!credential) return false;
+    return credential === 'Comp-OS-BETA';
   }
 
   /**
@@ -170,26 +158,38 @@
     if (targetStepIndex <= currentStep) return true;
 
     for (let i = 0; i < targetStepIndex; i++) {
-      const step = steps[i];
-      if (!step) continue;
-      
-      const stepName = step.name;
-      if (stepName && !($stepValidity[/** @type {keyof typeof $stepValidity} */ (stepName)])) {
+      /** @type {any} */
+      const stepName = steps[i]?.name;
+      if (stepName && !$stepValidity[stepName]) {
         return false;
       }
     }
 
     return true;
   }
->>>>>>> Stashed changes
 </script>
 
 {#if !isAuthorized}
-  <AuthScreen onAuthorized={() => isAuthorized = true} />
+  <AuthScreen
+    authorize={authorizeInstaller}
+    onAuthorized={async () => {
+      isAuthorized = true;
+      await updateSystemStats();
+    }}
+  />
 {:else}
   <div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100" in:fade>
     <!-- Subtle Marble-like background effect -->
-    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style="background-image: url('https://www.transparenttextures.com/patterns/marble.png');"></div>
+    <div
+      class="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
+      style="background-image:
+        radial-gradient(circle at 20% 20%, rgba(15, 23, 42, 0.18) 0, transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(15, 23, 42, 0.12) 0, transparent 30%),
+        radial-gradient(circle at 40% 75%, rgba(15, 23, 42, 0.14) 0, transparent 32%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.08) 25%, transparent 25%, transparent 50%, rgba(15, 23, 42, 0.08) 50%, rgba(15, 23, 42, 0.08) 75%, transparent 75%, transparent);
+        background-size: 320px 320px, 280px 280px, 360px 360px, 24px 24px;
+        background-position: 0 0, 120px 40px, 60px 160px, 0 0;"
+    ></div>
 
     <div class="relative z-10 max-w-6xl mx-auto px-6 py-8">
     <header class="mb-10 flex items-end justify-between border-b border-slate-200 pb-6">
@@ -255,24 +255,16 @@
       <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
         {#each steps as step, index}
           <button 
-            type="button"
             class="text-left group transition-all"
             on:click={() => { 
-<<<<<<< Updated upstream
-              const prevStepName = steps[index-1]?.name;
-              /** @type {any} */
-              const psn = prevStepName;
-              if (index <= currentStep || (psn && $stepValidity[psn])) currentStep = index; 
-=======
-              if (canNavigateToStep(index) && (currentStep !== index || currentTab !== 0)) {
+              if (canNavigateToStep(index)) {
                 currentStep = index;
                 currentTab = 0;
               }
->>>>>>> Stashed changes
             }}
-            disabled={index > currentStep && !((steps[index-1]?.name) && $stepValidity[/** @type {any} */ (steps[index-1].name)])}
+            disabled={!canNavigateToStep(index)}
           >
-            <div class="text-[10px] font-bold uppercase tracking-wider mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
+            <div class="text-[10px] font-bold uppercase tracking-tighter mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
               {step.name}
             </div>
             <div class="h-1 w-full rounded-full transition-colors {index === currentStep ? 'bg-blue-600' : index < currentStep ? 'bg-slate-300' : 'bg-slate-100'}"></div>
@@ -296,10 +288,11 @@
     <main class="min-h-[500px] mb-24">
       {#key currentStep}
         <div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }} class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <svelte:component 
-            this={currentStepComponent} 
-            {...(currentStep === 0 ? { onModeSelect: nextStep } : {})}
-          />
+          {#if currentStep === 0}
+            <Welcome onModeSelect={nextStep} />
+          {:else}
+            <svelte:component this={currentStepComponent} />
+          {/if}
         </div>
       {/key}
     </main>
@@ -348,15 +341,11 @@
           <button 
             class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none" 
             on:click={nextStep} 
-<<<<<<< Updated upstream
-            disabled={!$stepValidity[/** @type {any} */ (steps[currentStep].name)]}
-=======
             disabled={isLastTab
-               ? !$stepValidity[/** @type {keyof typeof $stepValidity} */ (currentStepName)]
-               : !$tabCompletion[/** @type {keyof typeof $tabCompletion} */ (currentStepName)]?.[
-                   /** @type {any} */ (currentStepTabs[currentTab])
+               ? !$stepValidity[/** @type {any} */ (steps[currentStep].name)]
+               : !$tabCompletion[/** @type {any} */ (steps[currentStep].name)]?.[
+                   /** @type {any} */ (getVisibleTabs(steps[currentStep].name, $installerState.userExperienceMode)[currentTab])
                  ]}
->>>>>>> Stashed changes
           >
             {#if currentStep === steps.length - 1 && isLastTab}
               Complete Installation
@@ -397,9 +386,3 @@
 {/if}
 
 {/if}
-
-<style>
-  .step-content {
-    min-height: 55vh;
-  }
-</style>
