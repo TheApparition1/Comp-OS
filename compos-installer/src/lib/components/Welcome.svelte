@@ -6,8 +6,10 @@
 
   $: activeTab = tabs[$installerState.currentTab] || 'overview';
   
+  /** @param {string} mode */
   function handleSelect(mode) {
     setUserExperienceMode(mode);
+    setCurrentTab(0);
     onModeSelect();
   }
 

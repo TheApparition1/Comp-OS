@@ -51,12 +51,36 @@
   $: setCurrentTab(currentTab);
 
   $: currentStepComponent = steps[currentStep]?.component;
-  $: currentStepTabs = getVisibleTabs(steps[currentStep]?.name, $installerState.userExperienceMode);
+  $: currentStepTabs = getVisibleTabs(steps[currentStep]?.name, $installerState.userExperienceMode) || ['main'];
+  
+  $: {
+    // Ensure currentTab is always valid for the current step
+    if (currentTab >= currentStepTabs.length) {
+      currentTab = 0;
+    }
+  }
+
   $: isLastTab = currentTab >= currentStepTabs.length - 1;
   $: isFirstTab = currentTab === 0;
 
   $: progressPercent = steps.length > 0 ? ((currentStep + (currentStepTabs.length > 0 ? currentTab / currentStepTabs.length : 0)) / steps.length) * 100 : 0;
 
+<<<<<<< Updated upstream
+=======
+  /** @type {any} */
+  $: currentStepName = steps[currentStep]?.name;
+
+  $: {
+    if (isAuthorized && !statsInterval) {
+      updateSystemStats();
+      statsInterval = setInterval(updateSystemStats, 5000);
+    } else if (!isAuthorized && statsInterval) {
+      clearInterval(statsInterval);
+      statsInterval = undefined;
+    }
+  }
+
+>>>>>>> Stashed changes
   onMount(() => {
     updateSystemStats();
     const interval = setInterval(updateSystemStats, 5000);
@@ -128,6 +152,36 @@
     showDangerModal = false;
     dangerConfirmation = '';
   }
+<<<<<<< Updated upstream
+=======
+
+  /**
+   * @param {string} credential
+   */
+  async function authorizeInstaller(credential) {
+    // Authorization disabled - always allow access
+    return true;
+  }
+
+  /**
+   * @param {number} targetStepIndex
+   */
+  function canNavigateToStep(targetStepIndex) {
+    if (targetStepIndex <= currentStep) return true;
+
+    for (let i = 0; i < targetStepIndex; i++) {
+      const step = steps[i];
+      if (!step) continue;
+      
+      const stepName = step.name;
+      if (stepName && !($stepValidity[/** @type {keyof typeof $stepValidity} */ (stepName)])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+>>>>>>> Stashed changes
 </script>
 
 {#if !isAuthorized}
@@ -201,16 +255,24 @@
       <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
         {#each steps as step, index}
           <button 
+            type="button"
             class="text-left group transition-all"
             on:click={() => { 
+<<<<<<< Updated upstream
               const prevStepName = steps[index-1]?.name;
               /** @type {any} */
               const psn = prevStepName;
               if (index <= currentStep || (psn && $stepValidity[psn])) currentStep = index; 
+=======
+              if (canNavigateToStep(index) && (currentStep !== index || currentTab !== 0)) {
+                currentStep = index;
+                currentTab = 0;
+              }
+>>>>>>> Stashed changes
             }}
             disabled={index > currentStep && !((steps[index-1]?.name) && $stepValidity[/** @type {any} */ (steps[index-1].name)])}
           >
-            <div class="text-[10px] font-bold uppercase tracking-tighter mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
+            <div class="text-[10px] font-bold uppercase tracking-wider mb-1 transition-colors {index === currentStep ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}">
               {step.name}
             </div>
             <div class="h-1 w-full rounded-full transition-colors {index === currentStep ? 'bg-blue-600' : index < currentStep ? 'bg-slate-300' : 'bg-slate-100'}"></div>
@@ -286,7 +348,15 @@
           <button 
             class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none" 
             on:click={nextStep} 
+<<<<<<< Updated upstream
             disabled={!$stepValidity[/** @type {any} */ (steps[currentStep].name)]}
+=======
+            disabled={isLastTab
+               ? !$stepValidity[/** @type {keyof typeof $stepValidity} */ (currentStepName)]
+               : !$tabCompletion[/** @type {keyof typeof $tabCompletion} */ (currentStepName)]?.[
+                   /** @type {any} */ (currentStepTabs[currentTab])
+                 ]}
+>>>>>>> Stashed changes
           >
             {#if currentStep === steps.length - 1 && isLastTab}
               Complete Installation

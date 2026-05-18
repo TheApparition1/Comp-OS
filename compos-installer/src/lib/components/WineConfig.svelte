@@ -1,6 +1,7 @@
 <script>
   import { Wine, Settings, Package, AlertTriangle, CheckCircle, XCircle, CheckCircle2, Box, Cpu, Layers, HardDrive, Zap, Info } from 'lucide-svelte';
   import { installerState, updateInstallerSection } from '$lib/stores/installerState.js';
+  import { fade, slide } from 'svelte/transition';
   
   let wineOptionId = $installerState.wine.option || 'winetricks';
   let enable32BitSupport = true;
@@ -45,6 +46,19 @@
       cpu: 'Standard dual-core',
       features: ['Helper scripts', 'Easy DLL install', 'GUI config', 'Gaming ready'],
       dependencies: ['Wine', 'Cabextract', 'Unzip', 'Wget']
+    },
+    {
+      id: 'proton',
+      name: 'Proton (GE)',
+      description: 'Steam-optimized Wine fork by GloriousEggroll. Includes numerous patches for gaming performance and compatibility that aren\'t in upstream Wine.',
+      icon: 'PR',
+      image: '/images/proton-logo.png',
+      packages: ['proton-ge-custom-bin'],
+      size: '950 MB',
+      ram: '512 MB+',
+      cpu: 'Performance quad-core',
+      features: ['Gaming optimized', 'FSYNC/ESYNC', 'DXVK/VKD3D', 'Media Foundation'],
+      dependencies: ['Vulkan', 'Python', 'SDL2']
     }
   ];
   
@@ -132,50 +146,55 @@
     <!-- Right Panel: Wine Details -->
     <div class="flex-1 bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col">
       <div class="h-64 w-full bg-slate-50 relative overflow-hidden group flex items-center justify-center p-12">
-        <img src={activeWine.image} alt={activeWine.name} class="w-full h-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-50/80 via-transparent to-transparent"></div>
-        <div class="absolute bottom-6 left-8">
-          <h3 class="text-3xl font-bold text-slate-900 mb-1">{activeWine.name}</h3>
-          <p class="text-slate-500 text-sm font-medium">Windows Translation Layer</p>
-        </div>
+        {#key activeWine.id}
+          <div transition:fade={{ duration: 300 }} class="relative w-full h-full">
+            <img src={activeWine.image} alt={activeWine.name} class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-50/80 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-8">
+              <h3 class="text-3xl font-bold text-slate-900 mb-1">{activeWine.name}</h3>
+              <p class="text-slate-500 text-sm font-medium">Compatibility Layer</p>
+            </div>
+          </div>
+        {/key}
       </div>
 
-      <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto">
+      {#key activeWine.id}
+      <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto" transition:slide={{ duration: 400, delay: 100 }}>
         <div class="space-y-6">
-          <div>
-            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Technical Description</h4>
+          <div transition:fade={{ duration: 300, delay: 200 }}>
+            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Overview</h4>
             <p class="text-slate-600 text-sm leading-relaxed">{activeWine.description}</p>
           </div>
 
-          <div>
-            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Resource Allocation</h4>
+          <div transition:fade={{ duration: 300, delay: 300 }}>
+            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Hardware Requirements</h4>
             <div class="grid grid-cols-2 gap-3">
               <div class="p-3 bg-slate-50 rounded-xl flex items-center gap-3">
                 <Cpu class="w-4 h-4 text-blue-600" />
                 <div class="min-w-0">
-                  <p class="text-[9px] font-bold text-slate-400 uppercase">Load</p>
+                  <p class="text-[9px] font-bold text-slate-400 uppercase">Process</p>
                   <p class="text-[11px] font-bold text-slate-900 truncate">{activeWine.cpu}</p>
                 </div>
               </div>
               <div class="p-3 bg-slate-50 rounded-xl flex items-center gap-3">
                 <Layers class="w-4 h-4 text-blue-600" />
                 <div class="min-w-0">
-                  <p class="text-[9px] font-bold text-slate-400 uppercase">Active RAM</p>
+                  <p class="text-[9px] font-bold text-slate-400 uppercase">Memory</p>
                   <p class="text-[11px] font-bold text-slate-900 truncate">{activeWine.ram}</p>
                 </div>
               </div>
               <div class="p-3 bg-slate-50 rounded-xl flex items-center gap-3">
                 <HardDrive class="w-4 h-4 text-blue-600" />
                 <div class="min-w-0">
-                  <p class="text-[9px] font-bold text-slate-400 uppercase">Binary Size</p>
+                  <p class="text-[9px] font-bold text-slate-400 uppercase">Disk</p>
                   <p class="text-[11px] font-bold text-slate-900 truncate">{activeWine.size}</p>
                 </div>
               </div>
               <div class="p-3 bg-slate-50 rounded-xl flex items-center gap-3">
                 <Zap class="w-4 h-4 text-blue-600" />
                 <div class="min-w-0">
-                  <p class="text-[9px] font-bold text-slate-400 uppercase">Translation</p>
-                  <p class="text-[11px] font-bold text-slate-900 truncate">POSIX/Win32</p>
+                  <p class="text-[9px] font-bold text-slate-400 uppercase">Runtime</p>
+                  <p class="text-[11px] font-bold text-slate-900 truncate">Win32/Win64</p>
                 </div>
               </div>
             </div>
@@ -183,21 +202,21 @@
         </div>
 
         <div class="space-y-6">
-          <div>
-            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Shared Objects</h4>
+          <div transition:fade={{ duration: 300, delay: 400 }}>
+            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">System Libraries</h4>
             <div class="flex flex-wrap gap-2">
               {#if activeWine.dependencies.length > 0}
                 {#each activeWine.dependencies as dep}
                   <span class="px-2.5 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-lg border border-slate-200">{dep}</span>
                 {/each}
               {:else}
-                <span class="text-xs text-slate-400 italic">No external dependencies</span>
+                <span class="text-xs text-slate-400 italic">No additional libraries required</span>
               {/if}
             </div>
           </div>
 
-          <div>
-            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Included Tooling</h4>
+          <div transition:fade={{ duration: 300, delay: 500 }}>
+            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Key Features</h4>
             <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
               <ul class="space-y-2">
                 {#each activeWine.features as feature}
@@ -211,6 +230,7 @@
           </div>
         </div>
       </div>
+      {/key}
     </div>
   </div>
 </div>

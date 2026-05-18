@@ -9,8 +9,10 @@
   $: tabs = getVisibleTabs('Network', experienceMode);
   
   let networkType = $installerState.network?.type || 'wired';
+  /** @type {any[]} */
   let wifiNetworks = [];
   let isScanning = false;
+  /** @type {string|null} */
   let scanError = null;
 
   async function scanWifi() {
@@ -26,8 +28,9 @@
         wifiNetworks = result;
       }
     } catch (e) {
-      console.error('WiFi scan failed:', e);
-      scanError = e.message || 'Failed to scan for WiFi networks';
+      const error = e instanceof Error ? e : new Error(String(e));
+      console.error('WiFi scan failed:', error);
+      scanError = error.message || 'Failed to scan for WiFi networks';
       // Fallback to empty if scan fails and not in simulation
       if ($installerState.mode !== 'simulation') {
         wifiNetworks = [];
@@ -72,6 +75,7 @@
     proxy: Globe
   };
 
+  /** @param {string} ssid */
   function selectWifiNetwork(ssid) {
     selectedWifiNetwork = ssid;
   }
@@ -106,8 +110,8 @@
         class="px-5 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 {activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}"
         on:click={() => setCurrentTab(tabs.indexOf(tab))}
       >
-        <svelte:component this={tabIcons[tab]} class="w-4 h-4" />
-        {tabLabels[tab]}
+        <svelte:component this={tabIcons[/** @type {keyof typeof tabIcons} */ (tab)]} class="w-4 h-4" />
+        {tabLabels[/** @type {keyof typeof tabLabels} */ (tab)]}
       </button>
     {/each}
   </div>

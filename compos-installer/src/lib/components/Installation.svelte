@@ -53,7 +53,7 @@
         if (!isInstalling) break;
       }
 
-      output += `\n[${new Date().toLocaleTimeString()}] Executing: ${step.command}\n`;
+      output += `\n>>> [${new Date().toLocaleTimeString()}] Executing: ${step.command}\n`;
       
       try {
         const result = await invoke('execute_command', { 
@@ -90,6 +90,7 @@
   function stopInstallation() {
     isInstalling = false;
     isPaused = false;
+    installationStarted = false;
   }
   
   /** @param {'automated' | 'educational'} selectedMode */
@@ -116,6 +117,7 @@
   $: totalSteps = installSteps.length;
   $: progressPercentage = totalSteps > 0 ? (progress / totalSteps) * 100 : 0;
 
+  /** @type {Record<string, any>} */
   $: summary = {
     Desktop: $installerState.desktop?.selectedDesktop || 'None',
     Disk: $installerState.disk?.selectedDisk || 'None',
