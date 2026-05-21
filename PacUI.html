@@ -7,6 +7,7 @@
 <a href="https://archlinux.org/packages/">Packages can be found here</a>
 <a>or archlinux.org/packages if that fails</a>
 
+<button onclick="child_process.spawn(pacman -Syu)">Update all</button>
 <form><label for="Package">Package:</label><input type="text" id="Package" name="Package"></form>
 
 <button type="button">"Download"</button>
@@ -40,6 +41,7 @@
         }
     }
 </script>
+<button onclick="child_process.spawn()">Refresh</button>
 <input type="text" id="search" onkeyup="Search()" placeholder="Search">
 <ul id="packages">
     <li><a>Ex1</a></li>
@@ -77,28 +79,43 @@
 <script>
 
     const pkg;
-checkedP = false;
-checkedA = false;
-
+// Download PKG
 child_process.spawn(cmdRun)
-    {
-    if(!checkedP)
-    {
-        cmdRun = "pacman -Ss"
-        checkedP = true;
-        child_process.spawn();
-    } else if(checkedP && !checkedA) {
-        cmdRun = "yay -Ss"
-        checkedA = true;
-        child_process.spawn();
-    } else if(cmdRun == pkg) {
 
-    } else if (cmdRun == !""){
+    if (cmdRun == !"" && cmdRun !== "pacman -S" + pkg) {
         cmdRun = "pacman -S" + pkg;
         child_process.spawn();
     }
+// Update the system
+    child_process.spawn(pacman -Syu)
 
-
-}
 </script>
+<script type="text/css">
+    #search {
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+
+    #packages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #packages li a {
+        border: 1px solid #ddd;
+        margin-top: -1px;
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+    }
+
+    #packages li a:hover:not(.header) {
+        background-color: #eee;
+    }</script>
 </html>
