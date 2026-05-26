@@ -1,0 +1,121 @@
+<html>
+<head>
+    <title>Arch Packages Installer</title>
+</head>
+<h2>Type the package name in the box below</h2>
+
+<a href="https://archlinux.org/packages/">Packages can be found here</a>
+<a>or archlinux.org/packages if that fails</a>
+
+<button onclick="child_process.spawn(pacman -Syu)">Update all</button>
+<form><label for="Package">Package:</label><input type="text" id="Package" name="Package"></form>
+
+<button type="button">"Download"</button>
+
+<select>
+    <option value="Arch(Pacman)">Arch(Pacman)</option>
+    <option value="Arch(AUR)">Arch(AUR)</option>
+    <option value="Debian(APT)">Debian(APT)</option>
+</select>
+<h2>
+    Search for packages below
+</h2>
+<script>
+    function Search() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('search');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("packages");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
+<button onclick="child_process.spawn()">Refresh</button>
+<input type="text" id="search" onkeyup="Search()" placeholder="Search">
+<ul id="packages">
+    <li><a>Ex1</a></li>
+    <li><a>Ex2</a></li>
+    <li><a>Ex3</a></li>
+    <li><a>Ex4</a></li>
+    <li><a>Ex5</a></li>
+    <li><a>Ex6</a></li>
+    <li><a>Ex7</a></li>
+    <li><a>Ex8</a></li>
+    <li><a>Ex9</a></li>
+    <li><a>Ex10</a></li>
+    <li><a>Ex1</a></li>
+    <li><a>Ex2</a></li>
+    <li><a>Ex3</a></li>
+    <li><a>Ex4</a></li>
+    <li><a>Ex5</a></li>
+    <li><a>Ex6</a></li>
+    <li><a>Ex7</a></li>
+    <li><a>Ex8</a></li>
+    <li><a>Ex9</a></li>
+    <li><a>Ex10</a></li>
+    <li><a>Ex1</a></li>
+    <li><a>Ex2</a></li>
+    <li><a>Ex3</a></li>
+    <li><a>Ex4</a></li>
+    <li><a>Ex5</a></li>
+    <li><a>Ex6</a></li>
+    <li><a>Ex7</a></li>
+    <li><a>Ex8</a></li>
+    <li><a>Ex9</a></li>
+    <li><a>Ex10</a></li>
+</ul>
+
+<script>
+
+    const pkg;
+// Download PKG
+child_process.spawn(cmdRun)
+
+    if (cmdRun == !"" && cmdRun !== "pacman -S" + pkg) {
+        cmdRun = "pacman -S" + pkg;
+        child_process.spawn();
+    }
+// Update the system
+    child_process.spawn(pacman -Syu)
+
+</script>
+<script type="text/css">
+    #search {
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+
+    #packages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #packages li a {
+        border: 1px solid #ddd;
+        margin-top: -1px;
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block;
+    }
+
+    #packages li a:hover:not(.header) {
+        background-color: #eee;
+    }</script>
+</html>
