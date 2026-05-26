@@ -17,7 +17,8 @@
       ram: '128 MB',
       cpu: 'GPU Required',
       features: ['GPU acceleration', 'Image support', 'Ligatures', 'Multiple layouts', 'Scriptable'],
-      dependencies: ['HarfBuzz', 'Zlib', 'Libpng', 'OpenGL']
+      dependencies: ['HarfBuzz', 'Zlib', 'Libpng', 'OpenGL'],
+      installCommands: ['pacman -S kitty']
     },
     {
       id: 'konsole',
@@ -30,7 +31,8 @@
       ram: '256 MB',
       cpu: 'Standard dual-core',
       features: ['Profile management', 'Split views', 'SSH bookmarks', 'Transparency', 'Search'],
-      dependencies: ['Qt6', 'KDE Frameworks', 'KParts']
+      dependencies: ['Qt6', 'KDE Frameworks', 'KParts'],
+      installCommands: ['pacman -S konsole']
     },
     {
       id: 'alacritty',
@@ -43,7 +45,8 @@
       ram: '64 MB',
       cpu: 'OpenGL 3.3+',
       features: ['Extreme speed', 'Vi mode', 'Multi-window', 'Regex search', 'YAML config'],
-      dependencies: ['Rust-runtime', 'Fontconfig', 'Freetype']
+      dependencies: ['Rust-runtime', 'Fontconfig', 'Freetype'],
+      installCommands: ['pacman -S alacritty']
     }
   ];
   
@@ -55,7 +58,11 @@
       icon: 'BA',
       packages: ['bash'],
       size: '2 MB',
-      features: ['Standard default', 'Scripting support', 'Command history', 'Tab completion']
+      ram: '2 MB',
+      cpu: 'Standard',
+      features: ['Standard default', 'Scripting support', 'Command history', 'Tab completion'],
+      installCommands: ['pacstrap install -S bash']
+
     },
     {
       id: 'fish',
@@ -134,9 +141,10 @@
 
     <!-- Right Panel: Terminal Details -->
     <div class="flex-1 bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col">
-      <div class="h-64 w-full bg-slate-900 relative overflow-hidden group">
-        <img src={activeTerminal.image} alt={activeTerminal.name} class="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+      <div class="h-64 w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden group">
+        <div class="absolute inset-0 opacity-20">
+          <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.2) 0%, transparent 50%);"></div>
+        </div>
         <div class="absolute bottom-6 left-8">
           <h3 class="text-3xl font-bold text-white mb-1">{activeTerminal.name}</h3>
           <p class="text-white/60 text-sm font-medium">Terminal Interface</p>

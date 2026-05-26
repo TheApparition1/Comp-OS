@@ -15,7 +15,6 @@ const initialState = {
   network: {
     type: 'wired',
     wifiNetwork: '',
-    wifiPassword: '',
     enabled: true,
     useDHCP: true,
     staticIP: '',
@@ -32,7 +31,6 @@ const initialState = {
     filesystem: 'ext4',
     swapSizeGb: 4,
     encryptionEnabled: false,
-    encryptionPassword: '',
     partitionPlan: [],
     previewSummary: ''
   },
@@ -40,7 +38,8 @@ const initialState = {
     selectedDesktop: 'gnome',
     displayManager: 'GDM',
     installExtras: true,
-    theme: 'default'
+    theme: 'default',
+    installCommands: []
   },
   terminal: {
     selectedTerminal: 'kitty',
@@ -60,7 +59,6 @@ const initialState = {
   user: {
     username: '',
     fullName: '',
-    password: '',
     hostname: 'compos-pc',
     autoLogin: false,
     enableSudo: true,
@@ -97,7 +95,7 @@ export const stepValidity = derived(installerState, ($s) => ({
   Utilities: true,
   Browser: true,
   Wine: true,
-  User: Boolean($s.user?.username && $s.user?.fullName && $s.user?.password),
+  User: Boolean($s.user?.username && $s.user?.fullName),
   DateTime: Boolean($s.datetime?.timezone),
   Installation: true
 }));
@@ -164,7 +162,7 @@ export const tabValidity = derived(installerState, ($s) => ({
   },
   User: {
     profile: Boolean($s.user?.username && $s.user?.fullName),
-    security: Boolean($s.user?.password),
+    security: true,
     system: true,
     advanced: true
   },
@@ -208,7 +206,7 @@ export const tabCompletion = derived(installerState, ($s) => ({
   },
   User: {
     profile: Boolean($s.user?.username && $s.user?.fullName),
-    security: Boolean($s.user?.password),
+    security: true,
     system: true,
     advanced: true
   },

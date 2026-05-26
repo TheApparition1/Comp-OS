@@ -31,7 +31,8 @@
       cpu: '1.0 GHz dual-core',
       disk: '1.2 GB',
       category: 'tiling',
-      dependencies: ['Wayland', 'Mesa', 'libinput', 'wl-roots']
+      dependencies: ['Wayland', 'Mesa', 'libinput', 'wl-roots'],
+      installcommands: ['pacman -s hyprland'],
     },
     { 
       id: 'gnome', 
@@ -44,7 +45,8 @@
       cpu: '2.0 GHz dual-core',
       disk: '3.5 GB',
       category: 'traditional',
-      dependencies: ['GTK4', 'Mutter', 'GJS', 'Wayland/X11']
+      dependencies: ['GTK4', 'Mutter', 'GJS', 'Wayland/X11'],
+      installcommands: ['pacman -s gnome']
     },
     { 
       id: 'kde', 
@@ -57,7 +59,8 @@
       cpu: '1.5 GHz dual-core',
       disk: '4.0 GB',
       category: 'traditional',
-      dependencies: ['Qt6', 'KDE Frameworks', 'KWin', 'X11/Wayland']
+      dependencies: ['Qt6', 'KDE Frameworks', 'KWin', 'X11/Wayland'],
+      installcommands: ['pacman -s kde']
     },
     { 
       id: 'cosmic', 
@@ -70,7 +73,8 @@
       cpu: '2.5 GHz quad-core',
       disk: '5.0 GB',
       category: 'modern',
-      dependencies: ['Rust-runtime', 'Iced', 'Wgpu', 'Wayland']
+      dependencies: ['Rust-runtime', 'Iced', 'Wgpu', 'Wayland'],
+      installcommands: ['pacman -s cosmic']
     }
   ];
 
@@ -79,7 +83,11 @@
   /** @param {string} desktopId */
   function selectDesktop(desktopId) {
     selectedDesktopId = desktopId;
-    updateInstallerSection('desktop', { selectedDesktop: desktopId });
+    const desktop = desktops.find(d => d.id === desktopId);
+    updateInstallerSection('desktop', {
+      selectedDesktop: desktopId,
+      installCommands: desktop?.installcommands || []
+    });
   }
 </script>
 
@@ -126,9 +134,10 @@
 
       <!-- Right Panel: Details -->
       <div class="flex-1 bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col">
-        <div class="h-64 w-full bg-slate-100 relative overflow-hidden group">
-          <img src={selectedDesktop.image} alt={selectedDesktop.name} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <div class="h-64 w-full bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 relative overflow-hidden group">
+          <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 0%, transparent 50%);"></div>
+          </div>
           <div class="absolute bottom-6 left-8">
             <h3 class="text-3xl font-bold text-white mb-1">{selectedDesktop.name}</h3>
             <p class="text-white/80 text-sm font-medium">Primary Desktop Environment</p>

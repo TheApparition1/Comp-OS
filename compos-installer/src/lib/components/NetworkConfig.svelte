@@ -54,7 +54,6 @@
   });
 
   let selectedWifiNetwork = $installerState.network?.wifiNetwork || '';
-  let wifiPassword = $installerState.network?.wifiPassword || '';
   let useDHCP = $installerState.network?.useDHCP !== false;
   let staticIP = $installerState.network?.staticIP || '';
   let staticNetmask = $installerState.network?.staticNetmask || '255.255.255.0';
@@ -86,7 +85,6 @@
     updateInstallerSection('network', {
       type: networkType,
       wifiNetwork: selectedWifiNetwork,
-      wifiPassword: wifiPassword,
       enabled: networkEnabled,
       useDHCP: useDHCP,
       staticIP: staticIP,
@@ -217,18 +215,6 @@
             {/if}
           </div>
 
-          {#if selectedWifiInfo && selectedWifiInfo.security !== 'Open'}
-            <div class="pt-4 border-t border-slate-100">
-              <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2" for="wifi-pass">Network Password</label>
-              <input 
-                id="wifi-pass"
-                type="password"
-                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all"
-                placeholder="Enter password for {selectedWifiNetwork}"
-                bind:value={wifiPassword}
-              />
-            </div>
-          {/if}
         </div>
       {:else}
         <div class="py-12 text-center">

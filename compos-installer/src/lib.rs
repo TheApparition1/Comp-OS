@@ -104,8 +104,8 @@ fn get_battery_info() -> BatteryInfo {
 }
 
 #[tauri::command]
-fn get_install_steps(_state: Option<Value>) -> Vec<InstallStep> {
-    vec![
+fn get_install_steps(state: Option<Value>) -> Vec<InstallStep> {
+    let mut steps = vec![
         InstallStep {
             description: "Prepare package database".to_string(),
             command: "pacman -Sy".to_string(),
@@ -120,9 +120,31 @@ fn get_install_steps(_state: Option<Value>) -> Vec<InstallStep> {
             category: "install".to_string(),
             explanation: "Install core packages to the target mount point.".to_string(),
         },
-    ]
-}
+    ];
 
+    // Add desktop install commands if present
+    if let Some(state) = state {
+        if let Some(desktop) = state.get("desktop") {
+            if let Some(commands) = desktop.get("installCommands") {
+                if let Some(cmds) = commands.as_array() {
+                    for cmd in cmds {
+                        if let Some(cmd_str) = cmd.as_str() {
+                            steps.push(InstallStep {
+                                description: format!("Install desktop environment"),
+                                command: cmd_str.to_string(),
+                                requires_sudo: true,
+                                category: "desktop".to_string(),
+                                explanation: "Install selected desktop environment and dependencies.".to_string(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    steps
+}
 #[tauri::command]
 fn execute_command(command: String, requires_sudo: Option<bool>) -> CommandResult {
     let prefix = if requires_sudo.unwrap_or(false) {

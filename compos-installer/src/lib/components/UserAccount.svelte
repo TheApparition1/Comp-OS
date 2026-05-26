@@ -1,5 +1,5 @@
 <script>
-  import { User, Key, Shield, Terminal, CircleUserRound, UserCircle2, Settings, Users, ChevronRight, Info, UserCircle as UserCircleRound } from 'lucide-svelte';
+  import { User, Shield, Terminal, CircleUserRound, UserCircle2, Settings, Users, ChevronRight, Info, UserCircle as UserCircleRound } from 'lucide-svelte';
   import { installerState, updateInstallerSection, setCurrentTab, getVisibleTabs } from '$lib/stores/installerState.js';
   
   $: experienceMode = $installerState.userExperienceMode;
@@ -8,8 +8,6 @@
   
   let username = $installerState.user.username || '';
   let fullName = $installerState.user.fullName || '';
-  let password = $installerState.user.password || '';
-  let confirmPassword = '';
   let hostname = $installerState.user.hostname || 'compos-pc';
   let autoLogin = $installerState.user.autoLogin || false;
   let enableSudo = $installerState.user.enableSudo !== false;
@@ -24,7 +22,7 @@
   };
   const tabIcons = {
     profile: User,
-    security: Key,
+    security: Shield,
     system: Terminal,
     advanced: Settings
   };
@@ -33,19 +31,12 @@
     return /^[a-z_][a-z0-9_-]*$/.test(username) && username.length >= 3 && username.length <= 32;
   }
   
-  function validatePassword() {
-    return password.length >= 8 && password.match(/[A-Z]/) && password.match(/[a-z]/) && password.match(/[0-9]/);
-  }
-  
-  $: passwordsMatch = password === confirmPassword && password.length > 0;
   $: usernameValid = username.length > 0 && validateUsername();
-  $: passwordValid = password.length > 0 && validatePassword();
 
   $: {
     updateInstallerSection('user', {
       username,
       fullName,
-      password,
       hostname,
       autoLogin,
       enableSudo,
@@ -113,29 +104,6 @@
     {:else if activeTab === 'security'}
       <div class="space-y-8">
         <h3 class="text-lg font-bold text-slate-900 mb-4">Authentication</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-3">
-            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="pass">Account Password</label>
-            <input 
-              id="pass"
-              type="password" 
-              class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:border-blue-600 focus:outline-none font-medium text-slate-700" 
-              placeholder="••••••••"
-              bind:value={password}
-            />
-          </div>
-          <div class="space-y-3">
-            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest" for="pass-conf">Confirm Password</label>
-            <input 
-              id="pass-conf"
-              type="password" 
-              class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:border-blue-600 focus:outline-none font-medium text-slate-700" 
-              placeholder="••••••••"
-              bind:value={confirmPassword}
-            />
-          </div>
-        </div>
-
         <div class="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100">
           <div class="flex items-center gap-4">
             <div class="w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-400">

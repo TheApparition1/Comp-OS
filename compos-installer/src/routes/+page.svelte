@@ -18,11 +18,10 @@
   import NetworkConfig from '$lib/components/NetworkConfig.svelte';
   import TerminalSelection from '$lib/components/TerminalSelection.svelte';
   import WineConfig from '$lib/components/WineConfig.svelte';
-  import AuthScreen from '$lib/components/AuthScreen.svelte';
 
   let currentStep = 0;
   let currentTab = 0;
-  let isAuthorized = false;
+  let isAuthorized = true;
   let installSteps = [];
   let hasSudo = false;
   let systemInfo = { hostname: 'Unknown' };
@@ -60,12 +59,9 @@
   $: progressPercent = steps.length > 0 ? ((currentStep + (currentStepTabs.length > 0 ? currentTab / currentStepTabs.length : 0)) / steps.length) * 100 : 0;
 
   $: {
-    if (isAuthorized && !statsInterval) {
+    if (!statsInterval) {
       updateSystemStats();
       statsInterval = setInterval(updateSystemStats, 5000);
-    } else if (!isAuthorized && statsInterval) {
-      clearInterval(statsInterval);
-      statsInterval = undefined;
     }
   }
 
@@ -144,14 +140,6 @@
   }
 
   /**
-   * @param {string} credential
-   */
-  async function authorizeInstaller(credential) {
-    if (!credential) return false;
-    return credential === 'Comp-OS-BETA';
-  }
-
-  /**
    * @param {number} targetStepIndex
    */
   function canNavigateToStep(targetStepIndex) {
@@ -169,16 +157,7 @@
   }
 </script>
 
-{#if !isAuthorized}
-  <AuthScreen
-    authorize={authorizeInstaller}
-    onAuthorized={async () => {
-      isAuthorized = true;
-      await updateSystemStats();
-    }}
-  />
-{:else}
-  <div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100" in:fade>
+<div class="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-blue-100" in:fade>
     <!-- Subtle Marble-like background effect -->
     <div
       class="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
@@ -383,6 +362,4 @@
       </div>
     </div>
   </div>
-{/if}
-
 {/if}
